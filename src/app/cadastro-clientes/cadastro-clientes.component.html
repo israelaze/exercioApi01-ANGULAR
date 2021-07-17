@@ -1,0 +1,75 @@
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Cadastro de CLientes</h1>
+</div>
+
+<div *ngIf="mensagemSucesso" class="alert alert-success mt-2"> 
+    <strong>Sucesso!</strong> {{mensagemSucesso}}
+</div>
+
+<div *ngIf="mensagemErro" class="alert alert-danger mt-2"> 
+    <strong>Erro!</strong> {{mensagemErro}}
+</div>
+
+<div class="row">
+    <div class="col-xl-12 col-md-12 mb-12">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+
+            <!--Defini um formulário no padrão Angular, e o submit chama a função cadastrarCliente,passando o conteúdo do formCadastro -->
+                <form [formGroup]="formCadastro" (ngSubmit)="cadastrarCliente()">  
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label>Nome do Cliente:</label>
+                            <input type="text" class="form-control" 
+                                formControlName="nome"/>     <!--capturando o campo nome do formulário-->
+                            <span *ngIf="form.nome.touched && form.nome.invalid">
+                                <span *ngIf="form.nome.errors.required" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Informe o nome do cliente.
+                                </span>
+                                <span *ngIf="form.nome.errors.pattern" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Caracteres inválidos para este campo.
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label>CPF:</label>
+                            <input type="text" class="form-control"
+                                formControlName="cpf" maxlength="11"/>        <!--capturando o campo cpf do formulário-->
+                            <span *ngIf="form.cpf.touched && form.cpf.invalid">
+                                <span *ngIf="form.cpf.errors.required" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Informe o CPF do cliente.
+                                </span>
+                                <span *ngIf="form.cpf.errors.pattern" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Informe os 11 dígitos do cpf.
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label>Email:</label>
+                            <input type="text" class="form-control" 
+                                formControlName="email"/>      <!--capturando o campo email do formulário-->
+                            <span *ngIf="form.email.touched && form.email.invalid">
+                                <span *ngIf="form.email.errors.required" class="text-danger">
+                                     <i class="fa fa-exclamation-circle"></i> Informe o email do cliente.
+                                </span>
+                                <span *ngIf="form.email.errors.pattern" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Caracteres inválidos para este campo.
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <br/>
+                    <input [disabled]="!formCadastro.valid" type="submit" value="Cadastrar Cliente" class="btn btn-success" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
