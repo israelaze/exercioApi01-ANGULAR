@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Usuario } from 'src/app/usuarios/model/usuario';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,19 +11,21 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
 
   //atributo
-  endpoint = environment.apiUrl + "/auth";
+  endpoint = environment.baseUrl + "/auth";
 
   //injeção de dependencia (inicialização)
   constructor(private httpClient: HttpClient) { }
 
   //método para chamar o serviço POST (Auth) para autenticação de usuários
-  post(usuario: any) {
+  autenticar(usuario: Usuario): Observable <Usuario> {
 
-    const formData = new FormData();
+    return this.httpClient.post<Usuario>(this.endpoint, usuario);
+
+   /* const formData = new FormData();
 
     formData.append('email', usuario.email);
     formData.append('senha', usuario.senha);
 
-    return this.httpClient.post(this.endpoint, formData)
+    return this.httpClient.post(this.endpoint, formData)*/
   }
 }

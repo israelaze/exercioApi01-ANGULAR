@@ -11,11 +11,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <input type="text"
-                                class="form-control"
-                                [(ngModel)]="pesquisa"
-                                placeholder="Pesquisar Clientes"
-                            >
+                            <input type="text" class="form-control" [(ngModel)]="pesquisa"
+                                placeholder="Pesquisar Clientes">
                         </div>
                     </div>
                 </div>
@@ -30,22 +27,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of clientes | filter: pesquisa | paginate : { itemsPerPage : 5, currentPage : page }"> 
+                        <tr
+                            *ngFor="let item of clientes | filter: pesquisa | paginate : { itemsPerPage : 5, currentPage : page }">
                             <td>{{item.nome}}</td>
                             <td>{{item.cpf}}</td>
                             <td>{{item.email}}</td>
                             <td>
-                                <button class="btn btn-danger btn-sm" 
-                                    (click)="obterCliente(item.idCliente)"  
-                                    data-target="#janela_exclusao"
-                                    data-toggle="modal">
+                                <button class="btn btn-danger btn-sm" (click)="buscarId(item.idCliente)"
+                                    data-target="#janela_exclusao" data-toggle="modal">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 &nbsp;
-                                <button class="btn btn-primary btn-sm"
-                                     (click)="obterCliente(item.idCliente)"
-                                     data-target="#janela_edicao" 
-                                     data-toggle="modal">
+                                <button class="btn btn-primary btn-sm" (click)="buscarId(item.idCliente)"
+                                    data-target="#janela_edicao" data-toggle="modal">
                                     <i class="fa fa-edit"></i>
                                 </button>
                             </td>
@@ -60,8 +54,7 @@
                     </tfoot>
                 </table>
 
-                <pagination-controls (pageChange)="handlePageChange($event)"
-                    previousLabel="Anterior"
+                <pagination-controls (pageChange)="handlePageChange($event)" previousLabel="Anterior"
                     nextLabel="Próximo">
                 </pagination-controls>
 
@@ -78,26 +71,25 @@
                 <h5 class="modal-title">Excluir Cliente</h5>
             </div>
             <div class="modal-body">
-                
+
                 <div *ngIf="mensagemSucesso" class="alert alert-success">
-                    <strong>Sucesso!</strong> {{mensagemSucesso}}
-                    </div>
-                    <div *ngIf="mensagemErro" class="alert alert-danger">
+                    <strong></strong> {{mensagemSucesso}}
+                </div>
+                <div *ngIf="mensagemErro" class="alert alert-danger">
                     <strong>Erro!</strong> {{mensagemErro}}
                 </div>
 
                 <p>Deseja realmente excluir o cliente selecionado?</p>
                 Nome do Cliente: <strong>{{cliente.nome}}</strong>
-                <br/>
+                <br />
                 CPF: <strong>{{cliente.cpf}}</strong>
-                <br/>
+                <br />
                 Email: <strong>{{cliente.email}}</strong>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-danger"
-                (click)="excluirCliente(cliente.idCliente)">
+                <button type="button" class="btn btn-danger" (click)="excluir(cliente.idCliente)">
                     <i class="fa fa-trash"></i> Confirmar Exclusão
                 </button>
             </div>
@@ -114,47 +106,56 @@
             <div class="modal-body">
 
                 <div *ngIf="mensagemSucesso" class="alert alert-success">
-                    <strong>Sucesso!</strong> {{mensagemSucesso}}
-                    </div>
-                    <div *ngIf="mensagemErro" class="alert alert-danger">
+                    <strong></strong> {{mensagemSucesso}}
+                </div>
+                <div *ngIf="mensagemErro" class="alert alert-danger">
                     <strong>Erro!</strong> {{mensagemErro}}
                 </div>
 
-                <form #formEdicao="ngForm"
-                    (submit)="atualizarCliente(formEdicao)">
+                <form [formGroup]="formEdicao" (ngSubmit)="atualizar()">
 
                     <!-- Campo Oculto-->
-                    <input type="hidden"
-                        name="idCliente"[(ngModel)]="cliente.idCliente"/>
+                    <input type="hidden" formControlName="idCliente" [(ngModel)]="cliente.idCliente" />
 
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <label>Nome do Cliente:</label>
-                            <input type="text" class="form-control" 
-                                name="nome"[(ngModel)]="cliente.nome"/>
+                            <input type="text" class="form-control" formControlName="nome"  [(ngModel)]="cliente.nome" />
+                            <span *ngIf="form.nome.touched && form.nome.invalid">
+                                <span *ngIf="form.nome.errors.required" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Informe o nome do cliente.
+                                </span>
+                                <span *ngIf="form.nome.errors.pattern" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Você deve informar nome e sobrenome.
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>CPF:</label>
+                            <input type="text" class="form-control" formControlName="cpf" readonly [(ngModel)]="cliente.cpf" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-5">
-                            <label>CPF:</label>
-                            <input type="text" class="form-control" readonly
-                                name="cpf"[(ngModel)]="cliente.cpf"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
                             <label>Email:</label>
-                            <input type="text" class="form-control"
-                            name="email" [(ngModel)]="cliente.email"/>
+                            <input type="text" class="form-control" formControlName="email" [(ngModel)]="cliente.email" />
+                            <span *ngIf="form.email.touched && form.email.invalid">
+                                <span *ngIf="form.email.errors.required" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Informe o email do cliente.
+                                </span>
+                                <span *ngIf="form.email.errors.pattern" class="text-danger">
+                                    <i class="fa fa-exclamation-circle"></i> Você deve informar um email para o campo.
+                                </span>
+                            </span>
                         </div>
                     </div>
                     <br />
                     <div class="text-right">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
                         &nbsp;
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-edit"></i> Salvar Alterações
-                        </button>
+                        <input [disabled]="!formEdicao.valid" type="submit" value="Atualizar Cliente" class="btn btn-success" />
                     </div>
                 </form>
             </div>

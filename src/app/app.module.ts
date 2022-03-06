@@ -1,38 +1,30 @@
 //UTILIZADO PARA HABILITAR TODOS OS MÓDULOS DO PROJETO ANGULAR
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-//páginas(componentes) do projeto
-import { AppComponent } from './app.component';
-import { PainelPrincipalComponent } from './painel-principal/painel-principal.component';
-import { CadastroClientesComponent } from './cadastro-clientes/cadastro-clientes.component';
-import { ConsultaClientesComponent } from './consulta-clientes/consulta-clientes.component';
-
-//importando as bibliotecas para mapeamento de rotas
-import {Routes, RouterModule} from '@angular/router';
-
 //importando a biblioteca para consumo de APIs
-import { HttpClientModule} from '@angular/common/http';
-
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 //importando a biblioteca para desenvolvimento de formulários
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-//importando a bilbioteca para paginação de dados
-import { NgxPaginationModule } from 'ngx-pagination';
-
-//importando os interceptors
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from './_interceptors/tokenInterceptor';
-
+import { BrowserModule } from '@angular/platform-browser';
+//importando as bibliotecas para mapeamento de rotas
+import { RouterModule, Routes } from '@angular/router';
 //importando o módulo de filtro de pesquisa
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+//importando a bilbioteca para paginação de dados
+import { NgxPaginationModule } from 'ngx-pagination';
+//páginas(componentes) do projeto
+import { AppComponent } from './app.component';
+import { CadastroClientesComponent } from './clientes/cadastro-clientes/cadastro-clientes.component';
+import { ConsultaClientesComponent } from './clientes/consulta-clientes/consulta-clientes.component';
+import { PainelPrincipalComponent } from './painel-principal/painel-principal.component';
+import { TokenInterceptor } from './_interceptors/tokenInterceptor';
+
 
 // mapeando as rotas (URLs) para cada componente(página) do projeto
-const routes : Routes = [
-  { path : 'painel-principal', component : PainelPrincipalComponent },
-  { path : 'cadastro-clientes', component : CadastroClientesComponent},
-  { path : 'consulta-clientes', component : ConsultaClientesComponent}
+const routes: Routes = [
+  { path: 'painel-principal', component: PainelPrincipalComponent },
+  { path: 'cadastro-clientes', component: CadastroClientesComponent },
+  { path: 'consulta-clientes', component: ConsultaClientesComponent }
 ];
 
 @NgModule({
