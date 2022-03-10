@@ -110,7 +110,6 @@ export class ConsultaClientesComponent implements OnInit {
         (e) => {
           this.ngOnInit();
           this.mensagemErro = e.console.error();
-          ;
         }
       )
   }
@@ -124,7 +123,12 @@ export class ConsultaClientesComponent implements OnInit {
           this.ngOnInit();
         },
         (e) => {
-          this.mensagemErro = e.error;
+          // limpando mensagens
+          this.mensagemSucesso = '';
+          this.mensagemErro = '';
+          
+          console.log(e.error)
+          this.mensagemErro = 'Cliente não encontrado';
           
         }
       )

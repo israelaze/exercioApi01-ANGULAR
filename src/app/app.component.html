@@ -109,7 +109,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; IAMF Informática 2021</span>
+                        <span>Copyright &copy; IAMF Informática 2022</span>
                     </div>
                 </div>
             </footer>
@@ -146,8 +146,6 @@
 <!--Só carrega a página se isLoggedIn = FALSE-->
 <div *ngIf="!isLoggedIn">
 
-
-
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-5 col-md-5">
@@ -162,40 +160,46 @@
                                     </div>
 
                                     <!--Formulário de autenticação -->
-                                    <form #formLogin="ngForm" (submit)="autenticar(formLogin)" class="user">
+                                    <form [formGroup]="formLogin" (ngSubmit)="autenticar()" class="user">
 
-                                        <!-- Entrando com os dados de Login-->
-                                        <div class="form-group">
-                                            <input type="email" name="email" ngModel
-                                                class="form-control form-control-user" />
+                                        <!--Exibindo mensagens de erro-->
+                                        <div *ngIf="mensagemErro" class="alert alert-danger">
+                                            <strong>Erro!</strong> {{mensagemErro}}
                                         </div>
+                            
+                                        <!--capturando o campo email do formulário-->
                                         <div class="form-group">
-                                            <input type="password" name="senha" ngModel
-                                                class="form-control form-control-user" />
+                                            <label>Email:</label>
+                                            <input type="email" class="form-control form-control-user"formControlName="email" maxlength="40"/>
+                                            <!-- exibindo mensagens de validação-->
+                                            <span *ngIf="form.email.touched && form.email.invalid">
+                                                <span *ngIf="form.email.errors.required" class="text-danger">
+                                                    <i class="fa fa-exclamation-circle"></i> Informe o email do usuário.
+                                                </span>
+                                                <span *ngIf="form.email.errors.pattern" class="text-danger">
+                                                    <i class="fa fa-exclamation-circle"></i> Informe um email válido.
+                                                </span>
+                                            </span>
                                         </div>
 
-                                        <input type="submit" value="Entrar"
-                                            class="btn btn-primary btn-user btn-block" />
+                                        <!--capturando o campo senha do formulário-->
+                                        <div class="form-group">
+                                            <label>Senha:</label>
+                                            <input type="password" class="form-control form-control-user"formControlName="senha" maxlength="6"/> 
+                                            <!-- exibindo mensagens de validação-->
+                                            <span *ngIf="form.senha.touched && form.senha.invalid">
+                                                <span *ngIf="form.senha.errors.required" class="text-danger">
+                                                    <i class="fa fa-exclamation-circle"></i> Informe a senha do usuário.
+                                                </span>
+                                                <span *ngIf="form.senha.errors.pattern" class="text-danger">
+                                                    <i class="fa fa-exclamation-circle"></i> A senha deve conter de 4 a 6 caracteres.
+                                                </span>
+                                            </span>
+                                        </div>
 
-                                        <!-- Chamando a modal para cadastro de Usuários-->
-                                        <input type="button" value="Cadastrar novo usuário"
-                                            class="btn btn-light btn-user btn-block"
-                                            data-target="#janelacadastrarusuario" data-toggle="modal" />
-                                        <!-- Chamando a modal para recuperação de senha-->
-                                        <input type="button" value="Esqueci minha senha"
-                                            class="btn btn-light btn-user btn-block" data-target="#janelarecuperarsenha"
-                                            data-toggle="modal" />
+                                        <!--Botão submit chama a função autenticar() passando o conteúdo do formLogin -->
+                                        <input [disabled]="!formLogin.valid" type="submit" value="Entrar" class="btn btn-primary btn-user btn-block" />
                                     </form>
-
-                                    <!-- <div *ngIf="mensagemErro" class="alert alert-danger">
-                                        <strong>Erro!</strong> {{mensagemErro}}
-                                    </div>
-                                -->
-                                    <!--Exibindo mensagens de erro -->
-                                    <div class="mt-2 text-center text-danger">
-                                        <strong>ERRO</strong> {{mensagemErro}}
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -204,8 +208,9 @@
             </div>
         </div>
     </div>
-    <!--    
-    MODAL PARA CADSTRAR USUÁRIO 
+</div>
+
+<!-- MODAL PARA CADASTRAR USUÁRIO --
     <div id="janelacadastrarusuario" class="modal fade" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -214,121 +219,72 @@
                 </div>
                 <div class="modal-body">
 
-                    <form #formCadastrarUsuario="ngForm" (submit)="cadastrarUsuario()" class="user">
+                    <div *ngIf="mensagemSucesso" class="alert alert-success">
+                        <strong></strong> {{mensagemSucesso}}
+                    </div>
+                    <div *ngIf="mensagemErro" class="alert alert-danger">
+                        <strong>Erro!</strong> {{mensagemErro}}
+                    </div>
 
+                    <!--Defini um formulário no padrão Angular. O botão do submit chama a função cadastrarCliente() no cadastro-clientes.component.ts --
+                    <form [formGroup]="formCadastro" (ngSubmit)="cadastrar()">
+    
                         <div class="row">
-                            <div class="col-md-12">
-                                <label>Nome do Usuário:</label>
-                                <input type="text" class="form-control" name="email" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label>Email:</label>
-                                <input type="text" class="form-control" name="email" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label>Senha:</label>
-                                <input type="text" class="form-control" name="email" />
-                            </div>
-                        </div>
-
-                        <div class="text-right mt-4">
-                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-                            &nbsp;
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-envelope"></i> Confirmar
-                            </button>
-                        </div>
-
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
--->
-
-    <!-- MODAL PARA CADASTRAR USUÁRIO -->
-    <div id="janelacadastrarusuario" class="modal fade" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Cadastrar novo usuário</h5>
-                </div>
-                <div class="modal-body">
-
-                    <!--Defini um formulário no padrão Angular. O botão do submit chama a função cadastrarCliente() no cadastro-clientes.component.ts -->
-                    <form [formGroup]="formCadastro" (ngSubmit)="cadastrarUsuario()">
-
-                        <div class="row">
-                            <div class="col-md-8">
-                                <label>Nome do usuário:</label>
+                            <div class="col-md-6">
+                                <!--capturando o campo nome do formulário--
+                                <label>Nome:</label>
                                 <input type="text" class="form-control" formControlName="nome" />
-                                <!--capturando o campo nome do formulário-->
                                 <span *ngIf="form.nome.touched && form.nome.invalid">
                                     <span *ngIf="form.nome.errors.required" class="text-danger">
                                         <i class="fa fa-exclamation-circle"></i> Informe o nome do usuário.
                                     </span>
                                     <span *ngIf="form.nome.errors.pattern" class="text-danger">
-                                        <i class="fa fa-exclamation-circle"></i> Caracteres inválidos para este campo.
+                                        <i class="fa fa-exclamation-circle"></i> Você deve informar nome e sobrenome.
                                     </span>
                                 </span>
                             </div>
                         </div>
-                        <br />
                         <div class="row">
                             <div class="col-md-5">
                                 <label>Email:</label>
-                                <input type="text" class="form-control" formControlName="email" maxlength="11" />
-                                <!--capturando o campo email do formulário-->
+                                <input type="text" class="form-control" formControlName="email" />
                                 <span *ngIf="form.email.touched && form.email.invalid">
                                     <span *ngIf="form.email.errors.required" class="text-danger">
-                                        <i class="fa fa-exclamation-circle"></i> Informe o email do cliente.
+                                        <i class="fa fa-exclamation-circle"></i> Informe o email do usuário.
                                     </span>
                                     <span *ngIf="form.email.errors.pattern" class="text-danger">
-                                        <i class="fa fa-exclamation-circle"></i> Caracteres inválidos para este campo.
+                                        <i class="fa fa-exclamation-circle"></i> Você deve informar um email para o campo.
                                     </span>
                                 </span>
                             </div>
                         </div>
-                        <br />
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <label>Senha:</label>
-                                <input type="text" class="form-control" formControlName="senha" />
-                                <!--capturando o campo senha do formulário-->
+                                <input type="password" class="form-control" formControlName="senha" />
                                 <span *ngIf="form.senha.touched && form.senha.invalid">
                                     <span *ngIf="form.senha.errors.required" class="text-danger">
-                                        <i class="fa fa-exclamation-circle"></i> Informe a senha do cliente.
+                                        <i class="fa fa-exclamation-circle"></i> Informe o nome do cliente.
                                     </span>
                                     <span *ngIf="form.senha.errors.pattern" class="text-danger">
-                                        <i class="fa fa-exclamation-circle"></i> Caracteres inválidos para este campo.
+                                        <i class="fa fa-exclamation-circle"></i> Você deve informar uma senha.
                                     </span>
                                 </span>
                             </div>
                         </div>
                         <br />
-                        <!--Botão ubmit chama a função cadastrarCliente passando o conteúdo do formCadastro -->
-                        <input [disabled]="!formCadastro.valid" type="submit" value="Cadastrar Usuario"
-                            class="btn btn-success" />
+                        <div class="text-right">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
+                            &nbsp;
+                            <input [disabled]="!formCadastro.valid" type="submit" value="Enviar" class="btn btn-success" />
+                        </div>
                     </form>
-                    <!--  Exibindo mensagens de erro -->
-                    <div class="mt-2 text-center text-danger">
-                        <strong>{{mensagemErro}}</strong>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-    <!-- MODAL PARA RECUPERAÇÃO DE SENHA -->
+     
+    <!-- MODAL PARA RECUPERAÇÃO DE SENHA --
     <div id="janelarecuperarsenha" class="modal fade" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -345,31 +301,31 @@
                         <strong>Erro!</strong> {{mensagemErro}}
                     </div>
 
-                    <form #formRecuperarSenha="ngForm" (submit)="recuperarSenha(formRecuperarSenha)">
-
-                        <!-- campo oculto -->
-                        <input type="hidden" name="idUsuario" [(ngModel)]="usuario.idUsuario" />
+                    <form [formGroup]="formRecuperarSenha" (ngSubmit)="recuperar()">
 
                         <div class="row">
-                            <div class="col-md-12">
-                                <label>Informe seu email:</label>
-                                <input type="text" class="form-control" name="email" [(ngModel)]="usuario.email" />
+                            <div class="col-md-5">
+                                <label>Email:</label>
+                                <input type="text" class="form-control" formControlName="email" />
+                                <span *ngIf="form2.email.touched && form2.email.invalid">
+                                    <span *ngIf="form2.email.errors.required" class="text-danger">
+                                        <i class="fa fa-exclamation-circle"></i> Informe o email do usuário.
+                                    </span>
+                                    <span *ngIf="form2.email.errors.pattern" class="text-danger">
+                                        <i class="fa fa-exclamation-circle"></i> Você deve informar um email para o campo.
+                                    </span>
+                                </span>
                             </div>
                         </div>
-
-                        <div class="text-right mt-4">
-                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+                        <br />
+                        <div class="text-right">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
                             &nbsp;
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-envelope"></i> Confirmar
-                            </button>
+                            <input [disabled]="!formRecuperarSenha.valid" type="submit" value="Enviar" class="btn btn-success" />
                         </div>
-
                     </form>
 
                 </div>
             </div>
         </div>
-    </div>
-
-</div>
+    </div> -->

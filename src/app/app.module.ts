@@ -41,10 +41,10 @@ const routes: Routes = [
     HttpClientModule,              //registrando a biblioteca para consumo de API
     FormsModule, ReactiveFormsModule, // registrando a biblioteca de formulários
     NgxPaginationModule,                 //registrando a biblioteca de paginação
-    Ng2SearchPipeModule                   // registrando a biblioteca de filtro
+    Ng2SearchPipeModule                // registrando a biblioteca de filtro
   ],
   providers: [{
-    provide: HTTP_INTERCEPTORS,
+    provide: HTTP_INTERCEPTORS, 
     useClass: TokenInterceptor,
     multi: true
   }],

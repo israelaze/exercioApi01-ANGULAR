@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './autenticacao/services/auth.service';
-import { RecuperarsenhaService } from './recuperarSenha/services/recuperarsenha.service';
-import { UsuariosService } from './usuarios/services/usuarios.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -11,27 +9,10 @@ import { UsuariosService } from './usuarios/services/usuarios.service';
 })
 export class AppComponent implements OnInit {
 
-  //variavel na classe (atributo) para armazenar se o usuario esta ou nao autenticado
+  //atributo para armazenar se o usuario está ou não autenticado
   isLoggedIn = false;
 
   //mensagens
-  mensagemErro2 = {
-    message: '',
-    code: '',
-    status: '',
-    objectName: '',
-    errors: [
-      {
-        message: '',
-        field: '',
-        parameter: ''
-      }
-    ]
-  };
-
-  errors = [];
-
-  
   mensagemErro = '';
   mensagemSucesso = '';
 
@@ -43,14 +24,13 @@ export class AppComponent implements OnInit {
     accessToken: ''
   };
 
-
   //injeção de dependencia..
-  constructor(private authService: AuthService,
-    private usuariosService: UsuariosService,
-    private recuperarsenhaServie: RecuperarsenhaService) { }
+  constructor(private authService: AuthService) { }
 
   //método executado antes do componente ser carregado..
   ngOnInit(): void {
+
+   
 
     //verificar se há um usuario autenticado..
     this.isLoggedIn = localStorage.getItem('AUTH') != null;
@@ -61,65 +41,74 @@ export class AppComponent implements OnInit {
     }
   }
 
-  //função para processar o SUBMIT do formulário de Autenticação
-  autenticar(formLogin: any): void {
+  //objeto para capturar os campos do formulário
+  formLogin = new FormGroup({
 
-    this.authService.autenticar(formLogin.form.value)
-      .subscribe( //resposta da API..
-        (data) => {
+    //declarando o campo 'email' do formulário
+    email: new FormControl('', [
+      Validators.required, //torna o campo obrigatório
+      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$') // expressão regular (REGEX)
 
-          //gravar os dados do usuario em uma localStorage..
-          this.usuario = (data as any);
-          localStorage.setItem("AUTH", JSON.stringify(this.usuario));
+    ]),
 
-          //limpar a mensagem de erro
-          this.mensagemErro ='';
+    //declarando o campo 'senha' do formulário
+    senha: new FormControl('', [
+      Validators.required, //campo obrigatório
+      Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{4,150}$') //expressão regular (REGEX)
+    ])
 
-          //recarregar a página..
-          this.ngOnInit();
-        },
-        (e) => {
-          console.log(e.error);
-          //this.mensagemErro = this.errors;
-          
-        }
-      )
+  });
 
-    /*
-    .subscribe( //resposta da API..
-        (data) => {
-
-          //gravar os dados do usuario em uma localStorage..
-          this.usuario = (data as any);
-          localStorage.setItem("AUTH", JSON.stringify(this.usuario));
-
-          //limpar a mensagem de erro
-          this.mensagemErro = "";
-
-          //recarregar a página..
-          this.ngOnInit();
-        },
-        (e) => {
-          if (e.status == 401) {
-            this.mensagemErro = "Usuário ou senha inválido.";
-          }
-          else {
-            this.mensagemErro = "Erro ao autenticar usuario.";
-          }
-        }
-      ) */
+  //criando um objeto pra utilizar o formulário na página
+  get form(): any {
+    return this.formLogin.controls;
   }
 
-  //encerrar sessão
+  //AUTENTICAR
+  autenticar(): void {
+      this.authService.autenticar(this.formLogin.value)
+      .subscribe( 
+        (data) => {
+
+          //gravar os dados do usuario em uma localStorage..
+          this.usuario = (data as any);
+          localStorage.setItem("AUTH", JSON.stringify(this.usuario));
+
+          //limpar a mensagem de erro
+          this.mensagemErro = '';
+
+          //recarregar a página..
+          this.ngOnInit();
+        },
+        (e) => {
+          console.log(e.error.message);
+          this.mensagemErro = e.error.message;
+
+        }
+      )
+    
+  }
+
+  //LOGOUT
   logout(): void {
     //apagar os dados em sessão
     localStorage.removeItem('AUTH');
+
+    //limpando os dados no formulário
+    this.formLogin.reset();
+
     //recarregar a página
     this.ngOnInit();
   }
 
+}
 
-  //objeto para capturar os campos do formulário
+
+
+/*
+  //FUNÇÃO PARA CADASTRAR USUÁRIOS
+
+ //objeto para capturar os campos do formulário
   formCadastro = new FormGroup({
 
     //declarando o campo 'nome' do formulário
@@ -148,48 +137,55 @@ export class AppComponent implements OnInit {
     return this.formCadastro.controls;
   }
 
-  //FUNÇÃO PARA CADASTRAR USUÁRIOS
-  cadastrarUsuario(): void {
+  cadastrar(): void {
 
     //limpar o conteudo das mensagens
     this.mensagemSucesso = '';
-    this.mensagemErro = this.mensagemErro;
+    this.mensagemErro = '';
 
-    //executando uma chamada POST para a API
-    this.usuariosService.post(this.formCadastro.value)
+    this.usuariosService.cadastrar(this.formCadastro.value)
       .subscribe(
         (data) => { //retorno de sucesso da API
           this.mensagemSucesso = data;
-          //limpar os campos do formulario
           this.formCadastro.reset();
         },
         (e) => { //retorno de erro da API
-          this.mensagemErro = e.error;
+          this.mensagemErro = "O email informado já encontra-se cadastrado, por favor tente outro.";
         }
-      );
+      )
   }
 
   //FUNÇÃO PARA RECUPERAR SENHA
- //função para processar o SUBMIT do formulário de Autenticação
- recuperarSenha(formRecuperarSenha: any): void {
+  formRecuperarSenha = new FormGroup({
 
-  this.recuperarsenhaServie.recuperar(formRecuperarSenha.form.value)
-    .subscribe( //resposta da API..
-      (data) => {
+    //declarando o campo 'email' do formulário
+    email: new FormControl('', [
+      Validators.required, //torna o campo obrigatório
+      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$') // expressão regular (REGEX)
 
-        //gravar os dados do usuario em uma localStorage..
-        this.mensagemSucesso = (data as any);
+    ])
+  });
 
-        //limpar a mensagem de erro
-      //  this.mensagemErro ='';
-
-        //recarregar a página..
-        this.ngOnInit();
-      },
-      (e) => {
-        this.mensagemErro = e.error;
-        
-      }
-    );
+  //criando um objeto pra utilizar o formulário na página
+  get form2(): any {
+    return this.formRecuperarSenha.controls;
   }
-}
+
+  recuperar(): void {
+
+    //limpar o conteúdo ds mensagens (sucesso ou erro)
+    this.mensagemSucesso = '';
+    this.mensagemErro = '';
+
+    this.recuperarSenhaService.recuperar(this.formRecuperarSenha.value)
+      .subscribe(
+        (data) => {
+          console.log(this.form2.value)
+          this.mensagemSucesso = data;
+          this.formRecuperarSenha.reset();
+        },
+        (e) => {
+          this.mensagemErro = e as any;
+        }
+      )
+  } */
