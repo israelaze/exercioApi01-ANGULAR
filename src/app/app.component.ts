@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from './autenticacao/services/auth.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -25,12 +25,10 @@ export class AppComponent implements OnInit {
   };
 
   //injeção de dependencia..
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private formBuilder: FormBuilder) { }
 
   //método executado antes do componente ser carregado..
   ngOnInit(): void {
-
-   
 
     //verificar se há um usuario autenticado..
     this.isLoggedIn = localStorage.getItem('AUTH') != null;
@@ -42,32 +40,28 @@ export class AppComponent implements OnInit {
   }
 
   //objeto para capturar os campos do formulário
-  formLogin = new FormGroup({
+  formLogin = this.formBuilder.group({
+    email: ['',
+      [Validators.required, //campo obrigatório
+      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$') //expressão regular (REGEX)
+      ]],
 
-    //declarando o campo 'email' do formulário
-    email: new FormControl('', [
-      Validators.required, //torna o campo obrigatório
-      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$') // expressão regular (REGEX)
-
-    ]),
-
-    //declarando o campo 'senha' do formulário
-    senha: new FormControl('', [
-      Validators.required, //campo obrigatório
-      Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{4,150}$') //expressão regular (REGEX)
-    ])
+    senha: ['',
+      [Validators.required,
+      Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{4,6}$')
+      ]]
 
   });
 
   //criando um objeto pra utilizar o formulário na página
-  get form(): any {
+  get login(): any {
     return this.formLogin.controls;
   }
 
   //AUTENTICAR
   autenticar(): void {
-      this.authService.autenticar(this.formLogin.value)
-      .subscribe( 
+    this.authService.autenticar(this.formLogin.value)
+      .subscribe(
         (data) => {
 
           //gravar os dados do usuario em uma localStorage..
@@ -86,7 +80,7 @@ export class AppComponent implements OnInit {
 
         }
       )
-    
+
   }
 
   //LOGOUT
