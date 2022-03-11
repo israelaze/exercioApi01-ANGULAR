@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientesService } from '../services/clientes.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ClientesService } from '../services/clientes.service';
 
 @Component({
   selector: 'app-consulta-clientes',
@@ -59,7 +59,7 @@ export class ConsultaClientesComponent implements OnInit {
     //declarando o campo 'email' do formulário
     email: new FormControl('', [
       Validators.required, //torna o campo obrigatório
-      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$') // expressão regular (REGEX)
+      Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{3,3})+$/) // expressão regular (REGEX)
 
     ])
   });

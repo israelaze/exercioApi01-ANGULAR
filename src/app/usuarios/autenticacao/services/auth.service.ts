@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Usuario } from 'src/app/usuarios/model/usuario.model';
+import { AuthPost } from 'src/app/usuarios/autenticacao/model/authPost.model';
 import { environment } from 'src/environments/environment';
 
 
@@ -16,8 +16,8 @@ export class AuthService {
   constructor(private httpClient: HttpClient) { }
 
   // AUTENTICAR
-  autenticar(usuario: Usuario){
-    return this.httpClient.post(this.endpoint, usuario);
+  autenticar(authPost: AuthPost){
+    return this.httpClient.post(this.endpoint, authPost);
 
   }
 }

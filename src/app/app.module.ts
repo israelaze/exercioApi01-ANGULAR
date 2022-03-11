@@ -18,13 +18,16 @@ import { CadastroClientesComponent } from './clientes/cadastro-clientes/cadastro
 import { ConsultaClientesComponent } from './clientes/consulta-clientes/consulta-clientes.component';
 import { PainelPrincipalComponent } from './painel-principal/painel-principal.component';
 import { TokenInterceptor } from './_interceptors/tokenInterceptor';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+
 
 
 // mapeando as rotas (URLs) para cada componente(página) do projeto
 const routes: Routes = [
   { path: 'painel-principal', component: PainelPrincipalComponent },
   { path: 'cadastro-clientes', component: CadastroClientesComponent },
-  { path: 'consulta-clientes', component: ConsultaClientesComponent }
+  { path: 'consulta-clientes', component: ConsultaClientesComponent },
+  { path: 'root', component: AppComponent }
 ];
 
 @NgModule({
@@ -32,7 +35,8 @@ const routes: Routes = [
     AppComponent,
     PainelPrincipalComponent,
     CadastroClientesComponent,
-    ConsultaClientesComponent
+    ConsultaClientesComponent,
+    UsuariosComponent
   ],
   // defini tudo o que será usado no projeto
   imports: [
@@ -41,7 +45,8 @@ const routes: Routes = [
     HttpClientModule,              //registrando a biblioteca para consumo de API
     FormsModule, ReactiveFormsModule, // registrando a biblioteca de formulários
     NgxPaginationModule,                 //registrando a biblioteca de paginação
-    Ng2SearchPipeModule                // registrando a biblioteca de filtro
+    Ng2SearchPipeModule           // registrando a biblioteca de filtro
+
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS, 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from './autenticacao/services/auth.service';
+import { AuthService } from './usuarios/autenticacao/services/auth.service';
+import { UsuariosService } from './usuarios/services/usuarios.service';
 
 @Component({
   selector: 'app-root',
@@ -17,15 +18,22 @@ export class AppComponent implements OnInit {
   mensagemSucesso = '';
 
   // objeto para armazenar os dados do usuario autenticado.. 
-  usuario = {
+  authGet = {
     idUsuario: 0,
     nome: '',
     email: '',
     accessToken: ''
   };
 
+  // objeto para armazenar os dados do usuário capturados no formulário .. 
+  authPost = {
+    email: '',
+    senha: ''
+  };
+
   //injeção de dependencia..
-  constructor(private authService: AuthService, private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService,
+    private usuariosService: UsuariosService) { }
 
   //método executado antes do componente ser carregado..
   ngOnInit(): void {
@@ -35,7 +43,7 @@ export class AppComponent implements OnInit {
 
     //se o usuario estiver autenticado, vamos ler os dados do usuario
     if (this.isLoggedIn) {
-      this.usuario = JSON.parse(localStorage.getItem('AUTH') as any);
+      this.authGet = JSON.parse(localStorage.getItem('AUTH') as any);
     }
   }
 
@@ -43,7 +51,7 @@ export class AppComponent implements OnInit {
   formLogin = this.formBuilder.group({
     email: ['',
       [Validators.required, //campo obrigatório
-      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$') //expressão regular (REGEX)
+      Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{3,3})+$/) //expressão regular (REGEX)
       ]],
 
     senha: ['',
@@ -53,20 +61,22 @@ export class AppComponent implements OnInit {
 
   });
 
-  //criando um objeto pra utilizar o formulário na página
+  //criando um objeto pra validar o formulário na página
   get login(): any {
     return this.formLogin.controls;
   }
 
   //AUTENTICAR
   autenticar(): void {
-    this.authService.autenticar(this.formLogin.value)
+    this.authPost = this.formLogin.value;
+
+    this.authService.autenticar(this.authPost)
       .subscribe(
         (data) => {
 
           //gravar os dados do usuario em uma localStorage..
-          this.usuario = (data as any);
-          localStorage.setItem("AUTH", JSON.stringify(this.usuario));
+          this.authGet = (data as any);
+          localStorage.setItem("AUTH", JSON.stringify(this.authGet));
 
           //limpar a mensagem de erro
           this.mensagemErro = '';
@@ -95,38 +105,36 @@ export class AppComponent implements OnInit {
     this.ngOnInit();
   }
 
-}
-
-
-
-/*
   //FUNÇÃO PARA CADASTRAR USUÁRIOS
 
- //objeto para capturar os campos do formulário
-  formCadastro = new FormGroup({
+  
+  // objeto para armazenar os dados do usuário capturados no formulário .. 
+  usuarioPost = {
+    nome: '',
+    email: '',
+    senha: ''
+  };
 
-    //declarando o campo 'nome' do formulário
-    nome: new FormControl('', [
-      Validators.required, //campo obrigatório
-      Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{3,150}$') //expressão regular (REGEX)
-    ]),
+   //objeto para capturar os campos do formulário
+   formCadastro = this.formBuilder.group({
+    nome: ['',
+      [ Validators.required, //campo obrigatório
+        Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{3,150}$') 
+      ]],
 
-    //declarando o campo 'email' do formulário
-    email: new FormControl('', [
-      Validators.required, //torna o campo obrigatório
-      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$') // expressão regular (REGEX)
+    email:  ['',
+      [ Validators.required, //campo obrigatório
+        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$')
+      ]],
 
-    ]),
-
-    //declarando o campo 'senha' do formulário
-    senha: new FormControl('', [
-      Validators.required, //campo obrigatório
-      Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{6,150}$') //expressão regular (REGEX)
-    ])
+    senha: ['',
+      [ Validators.required,
+        Validators.pattern('^[A-Za-zÀ-Üà-ü0-9\\s]{4,6}$')
+      ]]
 
   });
 
-  //criando um objeto para utilizar o formulário na página
+  //criando um objeto pra validar o formulário na página
   get form(): any {
     return this.formCadastro.controls;
   }
@@ -134,21 +142,25 @@ export class AppComponent implements OnInit {
   cadastrar(): void {
 
     //limpar o conteudo das mensagens
-    this.mensagemSucesso = '';
-    this.mensagemErro = '';
+    //this.mensagemSucesso = '';
+   // this.mensagemErro = '';
+    this.usuarioPost = this.formCadastro.value;
+
+    console.log(this.usuarioPost);
 
     this.usuariosService.cadastrar(this.formCadastro.value)
       .subscribe(
-        (data) => { //retorno de sucesso da API
-          this.mensagemSucesso = data;
-          this.formCadastro.reset();
+        (data) => { 
+          //this.mensagemSucesso = data;
+        //  this.formCadastro.reset();
         },
-        (e) => { //retorno de erro da API
-          this.mensagemErro = "O email informado já encontra-se cadastrado, por favor tente outro.";
+        (e) => { 
+         // this.mensagemErro = e.error;
         }
       )
   }
-
+}
+/*
   //FUNÇÃO PARA RECUPERAR SENHA
   formRecuperarSenha = new FormGroup({
 

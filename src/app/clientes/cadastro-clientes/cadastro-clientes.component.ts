@@ -12,7 +12,7 @@ export class CadastroClientesComponent implements OnInit {
   //atributos (campos)
   mensagemSucesso = '';
   mensagemErro = '';
-
+  
   //inicialização por meio de injeção de dependencia
   constructor(private clientesService: ClientesService) { }
 
@@ -31,14 +31,12 @@ export class CadastroClientesComponent implements OnInit {
     cpf: new FormControl('', [
       Validators.required, //torna o campo obrigatório
       Validators.pattern('^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}$') // expressão regular (REGEX)
-
     ]),
 
     //declarando o campo 'email' do formulário
     email: new FormControl('', [
       Validators.required, //torna o campo obrigatório
-      Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{3,3}$') // expressão regular (REGEX)
-
+      Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{3,3})+$/) // expressão regular (REGEX)
     ])
   });
 
@@ -61,7 +59,11 @@ export class CadastroClientesComponent implements OnInit {
           this.formCadastro.reset();
         },
         (e) => {
-          this.mensagemErro = "O CPF informado já encontra-se cadastrado. Tente outro.";
+          if(e.status == 400){
+            this.mensagemErro = "O CPF informado já encontra-se cadastrado. Tente outro.";
+          }else{
+            console.log(e.error);
+          } 
         }
       )
   }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Usuario } from '../model/usuario.model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +16,12 @@ export class UsuariosService {
   constructor(private httpClient: HttpClient) { }
 
   //método para chamar o serviço POST (cadastro de usuários)
-  cadastrar(usuario: Usuario) {
-    return this.httpClient.post(this.endpoint, usuario, { responseType: 'text' })
-  }
-}
+ /* cadastrar(usuario: Usuario) {
+    return this.httpClient.post(this.endpoint, usuario, { responseType: 'text' }) */
+
+    cadastrar(usuario: Usuario) {
+      return this.httpClient.post(this.endpoint, usuario, { responseType: 'text' });
+    }
+ }
+
+ 
