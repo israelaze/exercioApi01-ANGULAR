@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClientesService } from './../services/clientes.service';
+import { ClientesService } from 'src/app/clientes/shared/services/clientes.service';
 
 @Component({
   selector: 'app-cadastro-clientes',
@@ -67,4 +67,5 @@ export class CadastroClientesComponent implements OnInit {
         }
       )
   }
+
 }
