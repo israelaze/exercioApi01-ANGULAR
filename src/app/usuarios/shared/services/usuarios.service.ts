@@ -15,10 +15,6 @@ export class UsuariosService {
   //injeção de dependência
   constructor(private httpClient: HttpClient) { }
 
-  //método para chamar o serviço POST (cadastro de usuários)
- /* cadastrar(usuario: Usuario) {
-    return this.httpClient.post(this.endpoint, usuario, { responseType: 'text' }) */
-
     cadastrar(usuario: Usuario) {
       return this.httpClient.post(this.endpoint, usuario, { responseType: 'text' });
     }

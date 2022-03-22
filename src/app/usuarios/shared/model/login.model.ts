@@ -1,4 +1,4 @@
-export interface AuthPost {
+export interface Login {
     email: string;
     senha: string;
   }
