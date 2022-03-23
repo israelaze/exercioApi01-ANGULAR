@@ -9,6 +9,7 @@ import { AuthService } from '../shared/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit{
+  
 
   //mensagens
   mensagemErro = '';

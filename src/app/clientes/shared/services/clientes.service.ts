@@ -16,7 +16,7 @@ export class ClientesService {
 
   // CADASTRAR
   cadastrar(cliente: Cliente) {
-    return this.httpClient.post(this.endpoint, cliente, { responseType: 'text' });
+    return this.httpClient.post(this.endpoint, cliente, { responseType: 'json' });
   }
 
   // BUSCAR TODOS

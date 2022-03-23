@@ -3,16 +3,22 @@
     <h1 class="h3 mb-0 text-gray-800">Consulta de Clientes</h1>
 </div>
 
- <!-- Exibindo mensagens -->
-<div *ngIf="mensagemSucesso" class="alert alert-success">
-    <strong></strong> {{mensagemSucesso}}
-</div>
-
 <!-- Exibindo mensagens -->
-<div *ngIf="mensagemErro" class="alert alert-success">
-    <strong></strong> {{mensagemErro}}
+<div *ngIf="mensagemSucesso" class="w-50 p-2 alert alert-success alert-dismissible fade show" role="alert">
+    Cliente <strong>{{cliente.nome}}</strong> excluído com sucesso.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 
+<div *ngIf="mensagemErro" class="w-50 p-2 alert alert-danger mt-2 alert-dismissible fade show" role="alert">
+    <strong></strong> {{mensagemErro}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<!-- Página -->
 <div class="row">
     <div class="col-xl-12 col-md-12 mb-12">
         <div class="card border-left-primary shadow h-100 py-2">
@@ -92,7 +98,7 @@
 
             <!-- Botões -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-danger " data-dismiss="modal" (click)="excluir(cliente.idCliente)"> 
                     <i class="fa fa-trash"></i>  Confirmar Exclusão
                 </button>
@@ -113,7 +119,7 @@
                 <form [formGroup]="formEdicao" (ngSubmit)="atualizar()">
 
                     <div *ngIf="mensagemSucessoEdicao" class="alert alert-success">
-                        <strong></strong> {{mensagemSucessoEdicao}}
+                        Cliente <strong>{{cliente.nome}}</strong> atualizado com sucesso.
                     </div>
                     
                     <div *ngIf="mensagemErroEdicao" class="alert alert-danger">
@@ -171,7 +177,7 @@
                     <div class="text-right">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
                         &nbsp;
-                        <input [disabled]="!formEdicao.valid" type="submit" class="btn btn-success"  value="Atualizar Cliente"/>
+                        <input [disabled]="!formEdicao.valid" type="submit" class="btn btn-success" value="Atualizar Cliente" />
                     </div>
                 </form>
             </div>

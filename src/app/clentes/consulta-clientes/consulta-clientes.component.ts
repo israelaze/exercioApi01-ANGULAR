@@ -91,6 +91,9 @@ export class ConsultaClientesComponent implements OnInit {
      this.mensagemSucesso = '';
      this.mensagemErro = '';
  
+     this.mensagemSucessoEdicao = '';
+     this.mensagemErroEdicao = '';
+
      this.clientesService.buscarId(idCliente)
        .subscribe(
          (data) => {
@@ -125,11 +128,7 @@ export class ConsultaClientesComponent implements OnInit {
            this.mensagemSucesso = data;
            this.ngOnInit();
          },
-         (e) => {
-           // limpando mensagens
-           this.mensagemSucesso = '';
-           this.mensagemErro = '';
-           
+         (e) => { 
            console.log(e.error)
            this.mensagemErro = 'Cliente não encontrado';
            

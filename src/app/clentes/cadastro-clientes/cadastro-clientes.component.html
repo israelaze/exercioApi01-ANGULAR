@@ -3,12 +3,18 @@
     <h1 class="h3 mb-0 text-gray-800">Cadastro de Clientes</h1>
 </div>
 
-<div *ngIf="mensagemSucesso" class="alert alert-success mt-2">
-    <strong>{{mensagemSucesso}}</strong> 
+<div *ngIf="mensagemSucesso" class="w-50 p-2 alert alert-success alert-dismissible fade show" role="alert">
+     Cliente <strong>{{cliente.nome}}</strong>  cadastrado com sucesso.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 
-<div *ngIf="mensagemErro" class="alert alert-danger mt-2">
+<div *ngIf="mensagemErro" class="w-50 p-2 alert alert-danger mt-2 alert-dismissible fade show" role="alert">
     <strong>Erro!</strong> {{mensagemErro}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 
 <div class="row">
@@ -16,8 +22,7 @@
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
 
-                <!--Defini um formulário no padrão Angular
-                  Obotão do submit chama a função cadastrar() no cadastro-clientes.component.ts -->
+                <!--Formulário da página-->
                 <form [formGroup]="formCadastro" (ngSubmit)="cadastrar()">
 
                     <!--capturando o campo nome do formulário-->

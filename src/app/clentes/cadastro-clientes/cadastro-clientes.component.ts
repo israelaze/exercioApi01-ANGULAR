@@ -12,6 +12,14 @@ export class CadastroClientesComponent implements OnInit {
   //atributos (campos)
   mensagemSucesso = '';
   mensagemErro = '';
+
+  //objeto para armazenar os dados do cliente cadastrado
+  cliente = {
+    idCliente: 0,
+    nome: '',
+    cpf: '',
+    email: ''   
+  }
   
   //inicialização por meio de injeção de dependencia
   constructor(private clientesService: ClientesService) { }
@@ -55,7 +63,8 @@ export class CadastroClientesComponent implements OnInit {
     this.clientesService.cadastrar(this.formCadastro.value)
       .subscribe(
         (data) => {
-          this.mensagemSucesso = data;
+          this.cliente = data as any;
+          this.mensagemSucesso = 'Ok'; //incializando a variável
           this.formCadastro.reset();
         },
         (e) => {
