@@ -109,9 +109,10 @@ export class LoginComponent implements OnInit{
 
   // método para recuperar senha
   recuperar(): void {
+  
     this.recuperarSenhaService.recuperar(this.formRecuperar.value)
     .subscribe(
-      data => (this.mensagemSucessoRecuperar = data), 
+      data => (this.mensagemSucessoRecuperar = data, this.formRecuperar.reset({email: ''})), 
       e => {
         if (e.status == 404) {
           this.mensagemErroRecuperar = 'O email informado não foi encontrado.';
