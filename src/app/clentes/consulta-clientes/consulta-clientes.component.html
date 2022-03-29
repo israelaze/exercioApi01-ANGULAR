@@ -116,15 +116,15 @@
             </div>
             <div class="modal-body">
 
-                <form [formGroup]="formEdicao" (ngSubmit)="atualizar()">
+                <div *ngIf="mensagemSucessoEdicao" class="alert alert-success">
+                    Cliente <strong>{{cliente.nome}}</strong> atualizado com sucesso.
+                </div>
+                
+                <div *ngIf="mensagemErroEdicao" class="alert alert-danger">
+                    <strong>Erro!</strong> {{mensagemErroEdicao}}
+                </div>
 
-                    <div *ngIf="mensagemSucessoEdicao" class="alert alert-success">
-                        Cliente <strong>{{cliente.nome}}</strong> atualizado com sucesso.
-                    </div>
-                    
-                    <div *ngIf="mensagemErroEdicao" class="alert alert-danger">
-                        <strong>Erro!</strong> {{mensagemErroEdicao}}
-                    </div>
+                <form [formGroup]="formEdicao" (ngSubmit)="atualizar()">
 
                     <!-- Campo Oculto (idCliente)-->
                     <input type="hidden" formControlName="idCliente" [(ngModel)]="cliente.idCliente"/>
@@ -177,7 +177,7 @@
                     <div class="text-right">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
                         &nbsp;
-                        <input [disabled]="!formEdicao.valid" type="submit" class="btn btn-success" value="Atualizar Cliente" />
+                        <input [disabled]="!formEdicao.valid" type="submit" class="btn btn-success" value="Atualizar Cliente" /> 
                     </div>
                 </form>
             </div>

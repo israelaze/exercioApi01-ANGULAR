@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Usuario } from '../model/usuario.model';
+//import * as jwt_decode from 'jwt-decode';
 
 
 @Injectable({
@@ -9,15 +10,15 @@ import { Usuario } from '../model/usuario.model';
 })
 export class UsuariosService {
 
-  //atributo do endereço do endpoint(API)
+  // URL API WEB  
   endpoint = environment.baseUrl + "/usuarios";
 
-  //injeção de dependência
+  // INJEÇÃO DE DEPENDÊNCIA
   constructor(private httpClient: HttpClient) { }
 
-    cadastrar(usuario: Usuario) {
-      return this.httpClient.post(this.endpoint, usuario, { responseType: 'text' });
-    }
- }
+  // CADASTRAR
+  cadastrar(usuario: Usuario) {
+    return this.httpClient.post(this.endpoint, usuario);
+  }
 
- 
+}

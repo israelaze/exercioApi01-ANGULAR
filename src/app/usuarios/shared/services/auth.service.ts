@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import jwtDecode from 'jwt-decode';
 import { environment } from 'src/environments/environment';
 import { Login } from '../model/login.model';
-
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,13 @@ export class AuthService {
   // AUTENTICAR
   autenticar(login: Login){
     return this.httpClient.post(this.endpoint, login);
-
   }
+
+  // BUSCAR USUÁRIO AUTENTICADO
+  usuarioAutenticado() {
+
+    const authUser = JSON.parse(localStorage.getItem('AUTH') as any);
+    return authUser;
+  }
+
 }

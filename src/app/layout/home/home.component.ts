@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/usuarios/shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,13 +18,13 @@ export class HomeComponent implements OnInit {
   };
 
   //injeção de depend~encia
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   //método executado antes do componente ser carregado..
   ngOnInit(): void {
     
-    //capturando os dados do usuário autenticado
-    this.authGet = JSON.parse(localStorage.getItem('AUTH') as any);
+    //capturando os dados do usuário autenticado para exibir no componente
+    this.authGet = this.authService.usuarioAutenticado();
   }
 
   //LOGOUT
