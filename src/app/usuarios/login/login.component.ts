@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
-import { RecuperarSenhaService } from '../shared/services/recuperar-senha.service';
 
 @Component({
   selector: 'app-login',
@@ -14,9 +13,7 @@ export class LoginComponent implements OnInit{
   //mensagens
   mensagemErro = '';
   mensagemSucesso= '';
-  mensagemErroRecuperar= '';
-  mensagemSucessoRecuperar= '';
-
+  
   //objeto para armazenar os dados do usuario autenticado.. 
   authGet = {
     idUsuario: 0,
@@ -28,18 +25,11 @@ export class LoginComponent implements OnInit{
   //injeção de dependencia..
   constructor(private formBuilder: FormBuilder,
      private authService: AuthService, 
-     private router: Router,
-     private recuperarSenhaService: RecuperarSenhaService) { }
+     private router: Router
+  ) {}
 
   // método executado antes do componente ser carregado..
-  ngOnInit(): void {
-    //limpando mensagens da modal
-    this.mensagemErroRecuperar = '';
-    this.mensagemSucessoRecuperar = '';
-
-    //limpando o formulário na modal de recuperação de senha
-    this.formRecuperar.reset({email: ''});
-  }
+  ngOnInit(): void { }
 
   //LOGIN
 
@@ -88,40 +78,6 @@ export class LoginComponent implements OnInit{
 
         }
       )
-  }
-
-
-  //RECUPERAR SENHA
-
-  //objeto para capturar os campos do formulário
-  formRecuperar = this.formBuilder.group({
-    email: ['',
-      [Validators.required, //campo obrigatório
-      Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{3,3})+$/) //expressão regular (REGEX)
-      ]
-    ]
-  });
-  
-   //criando um objeto pra validar o formulário na página
-   get formRec(): any {
-    return this.formRecuperar.controls;
-  }
-
-  // método para recuperar senha
-  recuperar(): void {
-  
-    this.recuperarSenhaService.recuperar(this.formRecuperar.value)
-    .subscribe(
-      data => (this.mensagemSucessoRecuperar = data, this.formRecuperar.reset({email: ''})), 
-      e => {
-        if (e.status == 404) {
-          this.mensagemErroRecuperar = 'O email informado não foi encontrado.';
-        }else{
-          this.mensagemErroRecuperar = 'Não foi possível efetuar o envio. Tente novamente.';
-        }
-      } 
-
-    );
   }
 
 }

@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
         const authUser = this.authService.usuarioAutenticado();
         
         // VERIFICANDO SE OS ENDPOPINTS NÃO ESTÃO AUTORIZADOS
-        if (!req.url.includes("/api/auth") && !req.url.includes("/api/usuarios") && !req.url.includes("/api/recuperarsenha")) {
+        if (!req.url.includes("/api/auth") && !req.url.includes("/api/usuarios")) {
 
             //CLONANDO A REQUSIÇÃO ORIGINAL. ADICIONANDO O TOKEN NO CABEÇALHO DA REQUISIÇÃO
             authRequest = req.clone({

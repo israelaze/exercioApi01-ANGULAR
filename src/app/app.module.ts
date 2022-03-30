@@ -16,9 +16,9 @@ import { AutenticacaoComponent } from './layout/autenticacao/autenticacao.compon
 import { HomeComponent } from './layout/home/home.component';
 import { CadastroUsuariosComponent } from './usuarios/cadastro-usuarios/cadastro-usuarios.component';
 import { LoginComponent } from './usuarios/login/login.component';
-
 //interceptores
 import { httpInterceptorProviders } from './_interceptors';
+
 
 
 @NgModule({
